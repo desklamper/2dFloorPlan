@@ -1,5 +1,5 @@
 //
-//  ViewController.h
+//  CanvasView.h
 //  2DFloorPlan
 //
 //  Created by 黄乘风 on 2018/10/16.
@@ -8,9 +8,11 @@
 
 #import <UIKit/UIKit.h>
 #import <SceneKit/SceneKit.h>
+NS_ASSUME_NONNULL_BEGIN
 
-@interface ViewController : UIViewController
-
-
+@interface CanvasView : UIView
+-(void)initArray;
+-(void)addWall;
 @end
 
+NS_ASSUME_NONNULL_END

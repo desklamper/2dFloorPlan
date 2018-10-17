@@ -13,6 +13,10 @@
 		8131B5CF21758D060005F952 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 8131B5CE21758D060005F952 /* Assets.xcassets */; };
 		8131B5D221758D060005F952 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 8131B5D021758D060005F952 /* LaunchScreen.storyboard */; };
 		8131B5D521758D060005F952 /* main.m in Sources */ = {isa = PBXBuildFile; fileRef = 8131B5D421758D060005F952 /* main.m */; };
+		8131B5DD2175923F0005F952 /* Wall.m in Sources */ = {isa = PBXBuildFile; fileRef = 8131B5DC2175923F0005F952 /* Wall.m */; };
+		8131B5E3217595860005F952 /* Window.m in Sources */ = {isa = PBXBuildFile; fileRef = 8131B5E2217595860005F952 /* Window.m */; };
+		8131B5E6217595920005F952 /* Door.m in Sources */ = {isa = PBXBuildFile; fileRef = 8131B5E5217595920005F952 /* Door.m */; };
+		8131B5E92175DBE20005F952 /* CanvasView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8131B5E82175DBE20005F952 /* CanvasView.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +30,14 @@
 		8131B5D121758D060005F952 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		8131B5D321758D060005F952 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		8131B5D421758D060005F952 /* main.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = main.m; sourceTree = "<group>"; };
+		8131B5DB2175923F0005F952 /* Wall.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Wall.h; sourceTree = "<group>"; };
+		8131B5DC2175923F0005F952 /* Wall.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Wall.m; sourceTree = "<group>"; };
+		8131B5E1217595860005F952 /* Window.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Window.h; sourceTree = "<group>"; };
+		8131B5E2217595860005F952 /* Window.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Window.m; sourceTree = "<group>"; };
+		8131B5E4217595920005F952 /* Door.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Door.h; sourceTree = "<group>"; };
+		8131B5E5217595920005F952 /* Door.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Door.m; sourceTree = "<group>"; };
+		8131B5E72175DBE20005F952 /* CanvasView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CanvasView.h; sourceTree = "<group>"; };
+		8131B5E82175DBE20005F952 /* CanvasView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CanvasView.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -67,6 +79,14 @@
 				8131B5D021758D060005F952 /* LaunchScreen.storyboard */,
 				8131B5D321758D060005F952 /* Info.plist */,
 				8131B5D421758D060005F952 /* main.m */,
+				8131B5DB2175923F0005F952 /* Wall.h */,
+				8131B5DC2175923F0005F952 /* Wall.m */,
+				8131B5E1217595860005F952 /* Window.h */,
+				8131B5E2217595860005F952 /* Window.m */,
+				8131B5E4217595920005F952 /* Door.h */,
+				8131B5E5217595920005F952 /* Door.m */,
+				8131B5E72175DBE20005F952 /* CanvasView.h */,
+				8131B5E82175DBE20005F952 /* CanvasView.m */,
 			);
 			path = 2DFloorPlan;
 			sourceTree = "<group>";
@@ -142,8 +162,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				8131B5CA21758D040005F952 /* ViewController.m in Sources */,
+				8131B5DD2175923F0005F952 /* Wall.m in Sources */,
 				8131B5D521758D060005F952 /* main.m in Sources */,
 				8131B5C721758D040005F952 /* AppDelegate.m in Sources */,
+				8131B5E92175DBE20005F952 /* CanvasView.m in Sources */,
+				8131B5E3217595860005F952 /* Window.m in Sources */,
+				8131B5E6217595920005F952 /* Door.m in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
