@@ -13,6 +13,7 @@ NS_ASSUME_NONNULL_BEGIN
 @interface CanvasView : UIView <UIGestureRecognizerDelegate>
 -(void)initSource;
 -(void)addWall:(CGPoint)point;
+-(void)startPan;
 @end
 
 NS_ASSUME_NONNULL_END

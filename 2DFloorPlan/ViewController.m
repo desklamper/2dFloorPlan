@@ -44,11 +44,13 @@
 {
     btn.center = [[[ev allTouches] anyObject] locationInView:self.view];
     [self.canvas addWall:btn.center];
+//    [self.canvas setNeedsDisplay];
 }
 
 -(void)addWall:(UIButton *)addWall withEvent:ev
 {
     addWall.center = CGPointMake(20, 100);
+    [self.canvas startPan];
 }
 
 

@@ -42,10 +42,13 @@ WallType walltype;
 }
 
 -(void)addWall:(CGPoint)point{
-    self.isAddingWall = YES;
+    self.isAddingWall = NO;
     self.isFindingPoint = YES;
     self.startPoint = [self findPoint:point];
-    [self setNeedsDisplay];
+}
+
+-(void)startPan{
+    self.isAddingWall = YES;
 }
 
 #pragma mark - drawRect
@@ -70,14 +73,6 @@ WallType walltype;
         CGContextAddLineToPoint(context, x2, y2);
         CGContextStrokePath(context);
     }
-    if(self.isFindingPoint)
-    {
-        [[UIColor whiteColor] set];
-        float x = self.startPoint.x;
-        float y = self.startPoint.y;
-        CGRect rec = CGRectMake(x-6, y-6, 2*6, 2*6);
-        CGContextFillEllipseInRect(context, rec);
-    }
 }
 
 #pragma mark - GestureRecognizer
@@ -88,7 +83,7 @@ WallType walltype;
         return;
     }
     if((long)[recognizer state] == (long)UIGestureRecognizerStateBegan){
-        CGPoint startPoint = [recognizer locationInView:self];
+        CGPoint startPoint = self.startPoint;
         NSLog(@"start :  x:%f , y:%f",startPoint.x,startPoint.y);
         CGPoint start = [self findPoint:startPoint];
         Wall *wall = [[Wall alloc] init];
@@ -129,7 +124,8 @@ WallType walltype;
     for(Wall *wall in self.wallArray){
         if(wall.wallType == Horizon){
             if(fabs(point.y - wall.endPoint.y) <= 10 && point.x >= wall.startPoint.x - 10 && point.x <= wall.endPoint.x + 10 ){
-                if(point.x >= wall.startPoint.x - 10 && point.x < wall.endPoint.x)
+//                NSLog(@"here");
+                if(point.x >= wall.startPoint.x - 10 && point.x < wall.startPoint.x)
                 {
                     return CGPointMake(wall.startPoint.x, wall.startPoint.y);
                 }
@@ -144,7 +140,8 @@ WallType walltype;
         }
         else if(wall.wallType == Vertical){
             if(fabs(point.x - wall.endPoint.x) <= 10 && point.y >= wall.startPoint.y - 10 && point.y <= wall.endPoint.y + 10 ){
-                if(point.y >= wall.startPoint.y - 10 && point.y < wall.endPoint.y)
+//                NSLog(@"there");
+                if(point.y >= wall.startPoint.y - 10 && point.y < wall.startPoint.y)
                 {
                     return CGPointMake(wall.startPoint.x, wall.startPoint.y);
                 }
