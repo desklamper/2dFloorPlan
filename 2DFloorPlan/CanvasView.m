@@ -56,6 +56,7 @@ WallType walltype;
 
 -(void)startPan{
     self.isAddingWall = YES;
+    self.isFindingPoint = NO;
 }
 
 #pragma mark - drawRect
@@ -94,44 +95,65 @@ WallType walltype;
 - (void)panGestureDetected:(UIPanGestureRecognizer *)recognizer {
     if(!self.isAddingWall)
     {
-        return;
+        if((long)[recognizer state] == (long)UIGestureRecognizerStateBegan){
+            CGPoint start = [recognizer locationInView:self];
+            self.startPoint = start;
+        }
+        else if((long)[recognizer state] == (long)UIGestureRecognizerStateChanged)
+        {
+            CGPoint move = [recognizer locationInView:self];
+            float offsetX = move.x - self.startPoint.x;
+            float offsetY = move.y - self.startPoint.y;
+            [self panCanvas:offsetX/100 offsetY:offsetY/100];
+            [self setNeedsDisplay];
+        }
+        else if((long)[recognizer state] == (long)UIGestureRecognizerStateEnded){
+            CGPoint end = [recognizer locationInView:self];
+            float offsetX = end.x - self.startPoint.x;
+            float offsetY = end.y - self.startPoint.y;
+            [self panCanvas:offsetX/100 offsetY:offsetY/100];
+            [self setNeedsDisplay];
+        }
     }
-    if((long)[recognizer state] == (long)UIGestureRecognizerStateBegan){
-        CGPoint startPoint = self.startPoint;
-        NSLog(@"start :  x:%f , y:%f",startPoint.x,startPoint.y);
-        CGPoint start = [self findPoint:startPoint];
-        Wall *wall = [[Wall alloc] init];
-        wall.startPoint = start;
-        wall.endPoint = start;
-        self.currentWall = wall;
-        [self.wallArray addObject:wall];
-    }
-    else if((long)[recognizer state] == (long)UIGestureRecognizerStateChanged){
-        CGPoint changePoint = [recognizer locationInView:self];
-        NSLog(@"change :  x:%f , y:%f",changePoint.x,changePoint.y);
-        int xOy = [self.mathUtil isXorY:self.currentWall.startPoint anotherPoint:changePoint];
-        int index = (int)self.wallArray.count-1;
-        [self.wallArray removeObjectAtIndex:index];
-        self.currentWall.endPoint = xOy == 0 ? CGPointMake(changePoint.x,self.currentWall.startPoint.y) : CGPointMake(self.currentWall.startPoint.x, changePoint.y);
-        self.currentWall.endPoint = [self detectLines:self.currentWall.endPoint xORy:xOy];
-        self.currentWall.wallType = xOy;
-        Wall *wall = self.currentWall;
-        [self.wallArray addObject:wall];
-        [self setNeedsDisplay];
-    }
-    else if((long)[recognizer state] == (long)UIGestureRecognizerStateEnded){
-        CGPoint endPoint = [recognizer locationInView:self];
-        NSLog(@"end :  x:%f , y:%f",endPoint.x,endPoint.y);
-        int xOy = [self.mathUtil isXorY:self.currentWall.startPoint anotherPoint:endPoint];
-        int index = (int)self.wallArray.count-1;
-        [self.wallArray removeObjectAtIndex:index];
-        self.currentWall.endPoint = xOy == 0 ? CGPointMake(endPoint.x,self.currentWall.startPoint.y) : CGPointMake(self.currentWall.startPoint.x, endPoint.y);
-        self.currentWall.wallType = xOy;
-        [self.currentWall redefine];
-        Wall *wall = self.currentWall;
-        [self.wallArray addObject:wall];
-        [self setNeedsDisplay];
-        self.isAddingWall = NO;
+    else
+    {
+        if((long)[recognizer state] == (long)UIGestureRecognizerStateBegan){
+            CGPoint startPoint = self.startPoint;
+            NSLog(@"start :  x:%f , y:%f",startPoint.x,startPoint.y);
+            CGPoint start = [self findPoint:startPoint];
+            Wall *wall = [[Wall alloc] init];
+            wall.startPoint = start;
+            wall.endPoint = start;
+            self.currentWall = wall;
+            [self.wallArray addObject:wall];
+        }
+        else if((long)[recognizer state] == (long)UIGestureRecognizerStateChanged){
+            CGPoint changePoint = [recognizer locationInView:self];
+            NSLog(@"change :  x:%f , y:%f",changePoint.x,changePoint.y);
+            int xOy = [self.mathUtil isXorY:self.currentWall.startPoint anotherPoint:changePoint];
+            int index = (int)self.wallArray.count-1;
+            [self.wallArray removeObjectAtIndex:index];
+            self.currentWall.endPoint = xOy == 0 ? CGPointMake(changePoint.x,self.currentWall.startPoint.y) : CGPointMake(self.currentWall.startPoint.x, changePoint.y);
+            self.currentWall.endPoint = [self detectLines:self.currentWall.endPoint xORy:xOy];
+            self.currentWall.wallType = xOy;
+            Wall *wall = self.currentWall;
+            [self.wallArray addObject:wall];
+            [self setNeedsDisplay];
+        }
+        else if((long)[recognizer state] == (long)UIGestureRecognizerStateEnded){
+            CGPoint endPoint = [recognizer locationInView:self];
+            NSLog(@"end :  x:%f , y:%f",endPoint.x,endPoint.y);
+            int xOy = [self.mathUtil isXorY:self.currentWall.startPoint anotherPoint:endPoint];
+            int index = (int)self.wallArray.count-1;
+            [self.wallArray removeObjectAtIndex:index];
+            self.currentWall.endPoint = xOy == 0 ? CGPointMake(endPoint.x,self.currentWall.startPoint.y) : CGPointMake(self.currentWall.startPoint.x, endPoint.y);
+            self.currentWall.wallType = xOy;
+            [self.currentWall redefine];
+            Wall *wall = self.currentWall;
+            [self.wallArray addObject:wall];
+            [self setNeedsDisplay];
+            self.isAddingWall = NO;
+        }
     }
 }
 
@@ -202,5 +224,13 @@ WallType walltype;
         }
     }
     return point;
+}
+
+-(void)panCanvas:(float)offsetX offsetY:(float)offsetY{
+    for(Wall *wall in self.wallArray)
+    {
+        wall.startPoint = CGPointMake(wall.startPoint.x+offsetX, wall.startPoint.y+offsetY);
+        wall.endPoint = CGPointMake(wall.endPoint.x+offsetX, wall.endPoint.y+offsetY);
+    }
 }
 @end
