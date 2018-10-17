@@ -17,6 +17,7 @@
 		8131B5E3217595860005F952 /* Window.m in Sources */ = {isa = PBXBuildFile; fileRef = 8131B5E2217595860005F952 /* Window.m */; };
 		8131B5E6217595920005F952 /* Door.m in Sources */ = {isa = PBXBuildFile; fileRef = 8131B5E5217595920005F952 /* Door.m */; };
 		8131B5E92175DBE20005F952 /* CanvasView.m in Sources */ = {isa = PBXBuildFile; fileRef = 8131B5E82175DBE20005F952 /* CanvasView.m */; };
+		8131B5EC2176E2C60005F952 /* MathUtil.m in Sources */ = {isa = PBXBuildFile; fileRef = 8131B5EB2176E2C60005F952 /* MathUtil.m */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,6 +39,8 @@
 		8131B5E5217595920005F952 /* Door.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = Door.m; sourceTree = "<group>"; };
 		8131B5E72175DBE20005F952 /* CanvasView.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = CanvasView.h; sourceTree = "<group>"; };
 		8131B5E82175DBE20005F952 /* CanvasView.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = CanvasView.m; sourceTree = "<group>"; };
+		8131B5EA2176E2C50005F952 /* MathUtil.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = MathUtil.h; sourceTree = "<group>"; };
+		8131B5EB2176E2C60005F952 /* MathUtil.m */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.objc; path = MathUtil.m; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -87,6 +90,8 @@
 				8131B5E5217595920005F952 /* Door.m */,
 				8131B5E72175DBE20005F952 /* CanvasView.h */,
 				8131B5E82175DBE20005F952 /* CanvasView.m */,
+				8131B5EA2176E2C50005F952 /* MathUtil.h */,
+				8131B5EB2176E2C60005F952 /* MathUtil.m */,
 			);
 			path = 2DFloorPlan;
 			sourceTree = "<group>";
@@ -166,6 +171,7 @@
 				8131B5D521758D060005F952 /* main.m in Sources */,
 				8131B5C721758D040005F952 /* AppDelegate.m in Sources */,
 				8131B5E92175DBE20005F952 /* CanvasView.m in Sources */,
+				8131B5EC2176E2C60005F952 /* MathUtil.m in Sources */,
 				8131B5E3217595860005F952 /* Window.m in Sources */,
 				8131B5E6217595920005F952 /* Door.m in Sources */,
 			);

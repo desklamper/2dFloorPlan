@@ -15,9 +15,12 @@ NS_ASSUME_NONNULL_BEGIN
 
 @property (nonatomic) SCNVector3 start;
 @property (nonatomic) SCNVector3 end;
+@property (nonatomic) CGPoint startPoint;
+@property (nonatomic) CGPoint endPoint;
 @property (nonatomic) float length;
-@property (nonatomic) NSString *wallType;
+@property (nonatomic) int wallType;
 
+-(void)redefine;
 @end
 
 NS_ASSUME_NONNULL_END

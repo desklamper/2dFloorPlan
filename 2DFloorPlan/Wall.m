@@ -15,4 +15,25 @@
     return self;
 }
 
+-(void)redefine{
+    if(self.wallType == 0)
+    {
+        if(self.startPoint.x > self.endPoint.x)
+        {
+            CGPoint a = self.startPoint;
+            self.startPoint = self.endPoint;
+            self.endPoint = a;
+        }
+    }
+    else if(self.wallType == 1)
+    {
+        if(self.startPoint.y > self.endPoint.y)
+        {
+            CGPoint a = self.startPoint;
+            self.startPoint = self.endPoint;
+            self.endPoint = a;
+        }
+    }
+}
+
 @end

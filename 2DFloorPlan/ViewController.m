@@ -27,22 +27,30 @@
     self.view.backgroundColor = [UIColor blackColor];
     
     CanvasView *canvas = [[CanvasView alloc] initWithFrame:CGRectMake(0, 0, self.view.bounds.size.width, self.view.bounds.size.height)];
-    [canvas initArray];
+    [canvas initSource];
     self.canvas = canvas;
     [self.view addSubview:self.canvas];
     
-    self.addWall = [[UIButton alloc] initWithFrame:CGRectMake(20, 100, 100 , 50)];
+    self.addWall = [[UIButton alloc] initWithFrame:CGRectMake(20, 100, 20 , 20)];
     self.addWall.backgroundColor = [UIColor whiteColor];
-    [self.addWall setTitle:@"墙面" forState:UIControlStateNormal];
+//    [self.addWall setTitle:@"墙面" forState:UIControlStateNormal];
     [self.addWall setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
-    [self.addWall addTarget:self action:@selector(addWall:) forControlEvents:UIControlEventTouchUpInside];
+    [self.addWall addTarget:self action:@selector(drag:withEvent:) forControlEvents:UIControlEventTouchDragInside];
+    [self.addWall addTarget:self action:@selector(addWall:withEvent:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.addWall];
 }
 
--(void)addWall:(UIButton *)addWall
+-(void)drag:(UIButton *)btn withEvent:ev
 {
-    [self.canvas addWall];
+    btn.center = [[[ev allTouches] anyObject] locationInView:self.view];
+    [self.canvas addWall:btn.center];
 }
+
+-(void)addWall:(UIButton *)addWall withEvent:ev
+{
+    addWall.center = CGPointMake(20, 100);
+}
+
 
 
 
