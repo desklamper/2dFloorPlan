@@ -12,6 +12,8 @@
 
 @interface CanvasView()
 @property (nonatomic,strong) NSMutableArray *wallArray;
+@property (nonatomic,strong) NSMutableArray *xLines;
+@property (nonatomic,strong) NSMutableArray *yLines;
 @property (nonatomic,strong) Wall *currentWall;
 @property (nonatomic,strong) MathUtil *mathUtil;
 @property CGPoint startPoint;
@@ -30,7 +32,11 @@ WallType walltype;
 #pragma mark - init
 
 -(void)initSource{
+    self.backgroundColor = [UIColor blackColor];
+    
     self.wallArray = [[NSMutableArray alloc] init];
+    self.xLines = [[NSMutableArray alloc] init];
+    self.yLines = [[NSMutableArray alloc] init];
     self.currentWall = [[Wall alloc] init];
     UIPanGestureRecognizer *panGestureRecognizer = [[UIPanGestureRecognizer alloc] initWithTarget:self action:@selector(panGestureDetected:)];
     panGestureRecognizer.minimumNumberOfTouches = 1;
@@ -45,6 +51,7 @@ WallType walltype;
     self.isAddingWall = NO;
     self.isFindingPoint = YES;
     self.startPoint = [self findPoint:point];
+    [self setNeedsDisplay];
 }
 
 -(void)startPan{
@@ -73,6 +80,13 @@ WallType walltype;
         CGContextAddLineToPoint(context, x2, y2);
         CGContextStrokePath(context);
     }
+    
+    if(self.isFindingPoint)
+    {
+        [[UIColor whiteColor] set];
+        CGRect a =  CGRectMake(self.startPoint.x-6, self.startPoint.y-6, 6*2, 6*2);
+        CGContextFillEllipseInRect(context, a);
+    }
 }
 
 #pragma mark - GestureRecognizer
@@ -93,14 +107,17 @@ WallType walltype;
         [self.wallArray addObject:wall];
     }
     else if((long)[recognizer state] == (long)UIGestureRecognizerStateChanged){
-//        CGPoint changePoint = [recognizer locationInView:self];
-//        NSLog(@"change :  x:%f , y:%f",changePoint.x,changePoint.y);
-//        int index = (int)self.wallArray.count-1;
-//        [self.wallArray removeObjectAtIndex:index];
-//        self.currentWall.end = SCNVector3Make(changePoint.x, changePoint.y, 0);
-//        Wall *wall = self.currentWall;
-//        [self.wallArray addObject:wall];
-//        [self setNeedsDisplay];
+        CGPoint changePoint = [recognizer locationInView:self];
+        NSLog(@"change :  x:%f , y:%f",changePoint.x,changePoint.y);
+        int xOy = [self.mathUtil isXorY:self.currentWall.startPoint anotherPoint:changePoint];
+        int index = (int)self.wallArray.count-1;
+        [self.wallArray removeObjectAtIndex:index];
+        self.currentWall.endPoint = xOy == 0 ? CGPointMake(changePoint.x,self.currentWall.startPoint.y) : CGPointMake(self.currentWall.startPoint.x, changePoint.y);
+        self.currentWall.endPoint = [self detectLines:self.currentWall.endPoint xORy:xOy];
+        self.currentWall.wallType = xOy;
+        Wall *wall = self.currentWall;
+        [self.wallArray addObject:wall];
+        [self setNeedsDisplay];
     }
     else if((long)[recognizer state] == (long)UIGestureRecognizerStateEnded){
         CGPoint endPoint = [recognizer locationInView:self];
@@ -123,13 +140,13 @@ WallType walltype;
 -(CGPoint)findPoint:(CGPoint) point{
     for(Wall *wall in self.wallArray){
         if(wall.wallType == Horizon){
-            if(fabs(point.y - wall.endPoint.y) <= 10 && point.x >= wall.startPoint.x - 10 && point.x <= wall.endPoint.x + 10 ){
+            if(fabs(point.y - wall.endPoint.y) <= 30 && point.x >= wall.startPoint.x - 30 && point.x <= wall.endPoint.x + 30 ){
 //                NSLog(@"here");
-                if(point.x >= wall.startPoint.x - 10 && point.x < wall.startPoint.x)
+                if(point.x >= wall.startPoint.x - 30 && point.x < wall.startPoint.x)
                 {
                     return CGPointMake(wall.startPoint.x, wall.startPoint.y);
                 }
-                else if(point.x > wall.endPoint.x && point.x <= wall.endPoint.x + 10)
+                else if(point.x > wall.endPoint.x && point.x <= wall.endPoint.x + 30)
                 {
                     return CGPointMake(wall.endPoint.x, wall.endPoint.y);
                 }
@@ -139,13 +156,13 @@ WallType walltype;
             }
         }
         else if(wall.wallType == Vertical){
-            if(fabs(point.x - wall.endPoint.x) <= 10 && point.y >= wall.startPoint.y - 10 && point.y <= wall.endPoint.y + 10 ){
+            if(fabs(point.x - wall.endPoint.x) <= 30 && point.y >= wall.startPoint.y - 30 && point.y <= wall.endPoint.y + 30 ){
 //                NSLog(@"there");
-                if(point.y >= wall.startPoint.y - 10 && point.y < wall.startPoint.y)
+                if(point.y >= wall.startPoint.y - 30 && point.y < wall.startPoint.y)
                 {
                     return CGPointMake(wall.startPoint.x, wall.startPoint.y);
                 }
-                else if(point.x > wall.endPoint.y && point.x <= wall.endPoint.y + 10)
+                else if(point.y > wall.endPoint.y && point.y <= wall.endPoint.y + 30)
                 {
                     return CGPointMake(wall.endPoint.x, wall.endPoint.y);
                 }
@@ -158,4 +175,32 @@ WallType walltype;
     return point;
 }
 
+-(CGPoint)detectLines:(CGPoint)point xORy:(int)xOy{
+    //x
+    if(xOy == 0){
+        for(Wall *wall in self.wallArray){
+            if(fabs(wall.startPoint.x - point.x) < 20)
+            {
+                return CGPointMake(wall.startPoint.x, point.y);
+            }
+            else if(fabs(wall.endPoint.x - point.x) < 20)
+            {
+                return CGPointMake(wall.endPoint.x, point.y);
+            }
+        }
+    }
+    else{
+        for(Wall *wall in self.wallArray){
+            if(fabs(wall.startPoint.y - point.y) < 20)
+            {
+                return CGPointMake(point.x, wall.startPoint.y);
+            }
+            else if(fabs(wall.endPoint.y - point.y) < 20)
+            {
+                return CGPointMake(point.x, wall.endPoint.y);
+            }
+        }
+    }
+    return point;
+}
 @end
