@@ -116,24 +116,32 @@ WallType walltype;
         for(Wall *wall in self.wallArray)
         {
             if(wall.wallType == Horizon){
-                drawx = wall.startPoint;
-                CGContextMoveToPoint(context, drawx.x, lowest-30);
-                CGContextAddLineToPoint(context, drawx.x, lowest-10);
-                CGContextStrokePath(context);
-                drawx = wall.endPoint;
-                CGContextMoveToPoint(context, drawx.x, lowest-30);
-                CGContextAddLineToPoint(context, drawx.x, lowest-10);
-                CGContextStrokePath(context);
-            }
-            else if(wall.wallType == Vertical)
-            {
+//                drawx = wall.startPoint;
+//                CGContextMoveToPoint(context, drawx.x, lowest-30);
+//                CGContextAddLineToPoint(context, drawx.x, lowest-10);
+//                CGContextStrokePath(context);
+//                drawx = wall.endPoint;
+//                CGContextMoveToPoint(context, drawx.x, lowest-30);
+//                CGContextAddLineToPoint(context, drawx.x, lowest-10);
+//                CGContextStrokePath(context);
                 drawy = wall.startPoint;
                 CGContextMoveToPoint(context, leftest-30, drawy.y);
                 CGContextAddLineToPoint(context, leftest-10, drawy.y);
                 CGContextStrokePath(context);
-                drawy = wall.endPoint;
-                CGContextMoveToPoint(context, leftest-30, drawy.y);
-                CGContextAddLineToPoint(context, leftest-10, drawy.y);
+            }
+            else if(wall.wallType == Vertical)
+            {
+//                drawy = wall.startPoint;
+//                CGContextMoveToPoint(context, leftest-30, drawy.y);
+//                CGContextAddLineToPoint(context, leftest-10, drawy.y);
+//                CGContextStrokePath(context);
+//                drawy = wall.endPoint;
+//                CGContextMoveToPoint(context, leftest-30, drawy.y);
+//                CGContextAddLineToPoint(context, leftest-10, drawy.y);
+//                CGContextStrokePath(context);
+                drawx = wall.startPoint;
+                CGContextMoveToPoint(context, drawx.x, lowest-30);
+                CGContextAddLineToPoint(context, drawx.x, lowest-10);
                 CGContextStrokePath(context);
             }
         }
@@ -157,11 +165,11 @@ WallType walltype;
             [self setNeedsDisplay];
         }
         else if((long)[recognizer state] == (long)UIGestureRecognizerStateEnded){
-            CGPoint end = [recognizer locationInView:self];
-            float offsetX = end.x - self.startPoint.x;
-            float offsetY = end.y - self.startPoint.y;
-            [self panCanvas:offsetX/100 offsetY:offsetY/100];
-            [self setNeedsDisplay];
+//            CGPoint end = [recognizer locationInView:self];
+//            float offsetX = end.x - self.startPoint.x;
+//            float offsetY = end.y - self.startPoint.y;
+//            [self panCanvas:offsetX/100 offsetY:offsetY/100];
+//            [self setNeedsDisplay];
         }
     }
     else
