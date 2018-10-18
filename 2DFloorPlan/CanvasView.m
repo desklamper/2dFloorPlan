@@ -68,9 +68,21 @@ WallType walltype;
     CGContextSetLineWidth(context, 10.0f);
     UIColor *wallcolor = [UIColor grayColor];
     [wallcolor set];
-
+    BOOL isOut = NO;
+    float leftest = self.bounds.size.width;
+    float rightest = 0;
+    float lowest = self.bounds.size.height;
+    float hightest = 0;
     for(Wall *wall in self.wallArray)
     {
+        if(!isOut)
+        {
+            isOut = [self isWallOutScreen:wall];
+        }
+        leftest = wall.startPoint.x < leftest ? wall.startPoint.x : leftest;
+        rightest = wall.endPoint.x > rightest ? wall.endPoint.x : rightest;
+        lowest = wall.startPoint.y < lowest ? wall.startPoint.y : lowest;
+        hightest = wall.endPoint.y > hightest ? wall.endPoint.y : hightest;
         CGContextBeginPath(context);
         CGContextSetLineWidth(context, 10.0f);
         float x1 = wall.startPoint.x;
@@ -87,6 +99,44 @@ WallType walltype;
         [[UIColor whiteColor] set];
         CGRect a =  CGRectMake(self.startPoint.x-6, self.startPoint.y-6, 6*2, 6*2);
         CGContextFillEllipseInRect(context, a);
+    }
+    if(!isOut){
+        CGContextBeginPath(context);
+        CGContextSetLineWidth(context, 2.0f);
+        CGContextMoveToPoint(context, leftest, lowest-20);
+        CGContextAddLineToPoint(context, rightest, lowest-20);
+        CGContextStrokePath(context);
+        
+        CGContextMoveToPoint(context, leftest-20, lowest);
+        CGContextAddLineToPoint(context, leftest-20, hightest);
+        CGContextStrokePath(context);
+        
+        CGPoint drawx;
+        CGPoint drawy;
+        for(Wall *wall in self.wallArray)
+        {
+            if(wall.wallType == Horizon){
+                drawx = wall.startPoint;
+                CGContextMoveToPoint(context, drawx.x, lowest-30);
+                CGContextAddLineToPoint(context, drawx.x, lowest-10);
+                CGContextStrokePath(context);
+                drawx = wall.endPoint;
+                CGContextMoveToPoint(context, drawx.x, lowest-30);
+                CGContextAddLineToPoint(context, drawx.x, lowest-10);
+                CGContextStrokePath(context);
+            }
+            else if(wall.wallType == Vertical)
+            {
+                drawy = wall.startPoint;
+                CGContextMoveToPoint(context, leftest-30, drawy.y);
+                CGContextAddLineToPoint(context, leftest-10, drawy.y);
+                CGContextStrokePath(context);
+                drawy = wall.endPoint;
+                CGContextMoveToPoint(context, leftest-30, drawy.y);
+                CGContextAddLineToPoint(context, leftest-10, drawy.y);
+                CGContextStrokePath(context);
+            }
+        }
     }
 }
 
@@ -158,7 +208,7 @@ WallType walltype;
 }
 
 #pragma mark - helper
-
+//在墙面上找到点
 -(CGPoint)findPoint:(CGPoint) point{
     for(Wall *wall in self.wallArray){
         if(wall.wallType == Horizon){
@@ -196,7 +246,7 @@ WallType walltype;
     }
     return point;
 }
-
+//检测线
 -(CGPoint)detectLines:(CGPoint)point xORy:(int)xOy{
     //x
     if(xOy == 0){
@@ -225,12 +275,29 @@ WallType walltype;
     }
     return point;
 }
-
+//拖动
 -(void)panCanvas:(float)offsetX offsetY:(float)offsetY{
     for(Wall *wall in self.wallArray)
     {
         wall.startPoint = CGPointMake(wall.startPoint.x+offsetX, wall.startPoint.y+offsetY);
         wall.endPoint = CGPointMake(wall.endPoint.x+offsetX, wall.endPoint.y+offsetY);
     }
+}
+//检测一面墙是否在屏幕外
+-(BOOL)isWallOutScreen:(Wall *)wall{
+    if([self isPointOutScreen:wall.startPoint] || [self isPointOutScreen:wall.endPoint]){
+        return YES;
+    }
+    return NO;
+}
+//检测一个点是否在屏幕外
+-(BOOL)isPointOutScreen:(CGPoint)point{
+    float height = self.bounds.size.height;
+    float width = self.bounds.size.width;
+    if(point.x > 0 && point.x < width && point.y > 0 && point.y < height)
+    {
+        return NO;
+    }
+    return YES;
 }
 @end
