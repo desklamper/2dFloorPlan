@@ -32,7 +32,7 @@
     [self.view addSubview:self.canvas];
     
     self.addWall = [[UIButton alloc] initWithFrame:CGRectMake(20, 100, 20 , 20)];
-    self.addWall.backgroundColor = [UIColor whiteColor];
+    self.addWall.backgroundColor = [UIColor blackColor];
 //    [self.addWall setTitle:@"墙面" forState:UIControlStateNormal];
     [self.addWall setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
     [self.addWall addTarget:self action:@selector(drag:withEvent:) forControlEvents:UIControlEventTouchDragInside];

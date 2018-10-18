@@ -32,7 +32,7 @@ WallType walltype;
 #pragma mark - init
 
 -(void)initSource{
-    self.backgroundColor = [UIColor blackColor];
+    self.backgroundColor = [UIColor whiteColor];
     
     self.wallArray = [[NSMutableArray alloc] init];
     self.xLines = [[NSMutableArray alloc] init];
@@ -96,7 +96,7 @@ WallType walltype;
     
     if(self.isFindingPoint)
     {
-        [[UIColor whiteColor] set];
+        [[UIColor blackColor] set];
         CGRect a =  CGRectMake(self.startPoint.x-6, self.startPoint.y-6, 6*2, 6*2);
         CGContextFillEllipseInRect(context, a);
     }
@@ -201,14 +201,14 @@ WallType walltype;
 //            CGPoint endPoint = [recognizer locationInView:self];
 //            NSLog(@"end :  x:%f , y:%f",endPoint.x,endPoint.y);
 //            int xOy = [self.mathUtil isXorY:self.currentWall.startPoint anotherPoint:endPoint];
-//            int index = (int)self.wallArray.count-1;
-//            [self.wallArray removeObjectAtIndex:index];
+            int index = (int)self.wallArray.count-1;
+            [self.wallArray removeObjectAtIndex:index];
 //            self.currentWall.endPoint = xOy == 0 ? CGPointMake(endPoint.x,self.currentWall.startPoint.y) : CGPointMake(self.currentWall.startPoint.x, endPoint.y);
 //            self.currentWall.wallType = xOy;
-//            [self.currentWall redefine];
-//            Wall *wall = self.currentWall;
-//            [self.wallArray addObject:wall];
-//            [self setNeedsDisplay];
+            [self.currentWall redefine];
+            Wall *wall = self.currentWall;
+            [self.wallArray addObject:wall];
+            [self setNeedsDisplay];
             self.isAddingWall = NO;
         }
     }
