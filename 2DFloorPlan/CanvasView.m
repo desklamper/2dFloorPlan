@@ -151,10 +151,9 @@ WallType walltype;
         }
         else if((long)[recognizer state] == (long)UIGestureRecognizerStateChanged)
         {
-            CGPoint move = [recognizer locationInView:self];
-            float offsetX = move.x - self.startPoint.x;
-            float offsetY = move.y - self.startPoint.y;
-            [self panCanvas:offsetX/100 offsetY:offsetY/100];
+            CGPoint translate = [recognizer translationInView:self];
+            [recognizer setTranslation:CGPointMake(0, 0) inView:self];
+            [self panCanvas:CGPointMake(translate.x, translate.y)];
             [self setNeedsDisplay];
         }
         else if((long)[recognizer state] == (long)UIGestureRecognizerStateEnded){
@@ -191,17 +190,17 @@ WallType walltype;
             [self setNeedsDisplay];
         }
         else if((long)[recognizer state] == (long)UIGestureRecognizerStateEnded){
-            CGPoint endPoint = [recognizer locationInView:self];
-            NSLog(@"end :  x:%f , y:%f",endPoint.x,endPoint.y);
-            int xOy = [self.mathUtil isXorY:self.currentWall.startPoint anotherPoint:endPoint];
-            int index = (int)self.wallArray.count-1;
-            [self.wallArray removeObjectAtIndex:index];
-            self.currentWall.endPoint = xOy == 0 ? CGPointMake(endPoint.x,self.currentWall.startPoint.y) : CGPointMake(self.currentWall.startPoint.x, endPoint.y);
-            self.currentWall.wallType = xOy;
-            [self.currentWall redefine];
-            Wall *wall = self.currentWall;
-            [self.wallArray addObject:wall];
-            [self setNeedsDisplay];
+//            CGPoint endPoint = [recognizer locationInView:self];
+//            NSLog(@"end :  x:%f , y:%f",endPoint.x,endPoint.y);
+//            int xOy = [self.mathUtil isXorY:self.currentWall.startPoint anotherPoint:endPoint];
+//            int index = (int)self.wallArray.count-1;
+//            [self.wallArray removeObjectAtIndex:index];
+//            self.currentWall.endPoint = xOy == 0 ? CGPointMake(endPoint.x,self.currentWall.startPoint.y) : CGPointMake(self.currentWall.startPoint.x, endPoint.y);
+//            self.currentWall.wallType = xOy;
+//            [self.currentWall redefine];
+//            Wall *wall = self.currentWall;
+//            [self.wallArray addObject:wall];
+//            [self setNeedsDisplay];
             self.isAddingWall = NO;
         }
     }
@@ -283,6 +282,15 @@ WallType walltype;
         wall.endPoint = CGPointMake(wall.endPoint.x+offsetX, wall.endPoint.y+offsetY);
     }
 }
+-(void)panCanvas:(CGPoint)point{
+    for(Wall *wall in self.wallArray)
+    {
+        CGPoint start = CGPointMake(wall.startPoint.x+point.x, wall.startPoint.y+point.y);
+        CGPoint end = CGPointMake(wall.endPoint.x+point.x, wall.endPoint.y+point.y);
+        wall.startPoint = start;
+        wall.endPoint = end;
+    }
+}
 //检测一面墙是否在屏幕外
 -(BOOL)isWallOutScreen:(Wall *)wall{
     if([self isPointOutScreen:wall.startPoint] || [self isPointOutScreen:wall.endPoint]){
@@ -299,5 +307,11 @@ WallType walltype;
         return NO;
     }
     return YES;
+}
+//墙体融合
+-(void)mixWall:(Wall *)wall{
+    if(wall.wallType == Horizon){
+        
+    }
 }
 @end
