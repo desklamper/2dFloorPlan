@@ -14,6 +14,7 @@ NS_ASSUME_NONNULL_BEGIN
 -(void)initSource;
 -(void)addWall:(CGPoint)point;
 -(void)startPan;
+-(void)popWallArray;
 @end
 
 NS_ASSUME_NONNULL_END

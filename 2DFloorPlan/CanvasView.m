@@ -12,6 +12,7 @@
 
 @interface CanvasView()
 @property (nonatomic,strong) NSMutableArray *wallArray;
+@property (nonatomic,strong) NSMutableArray *wallArrayOrigin;
 @property (nonatomic,strong) NSMutableArray *xLines;
 @property (nonatomic,strong) NSMutableArray *yLines;
 @property (nonatomic,strong) Wall *currentWall;
@@ -21,7 +22,13 @@
 @property BOOL isFindingPoint;
 @end
 
-@implementation CanvasView
+@implementation CanvasView{
+    CGFloat zoomScale;
+    CGFloat zoomTemp;
+    CGFloat originX,originY;
+}
+
+
 
 typedef NS_ENUM(NSInteger, WallType){
     Horizon = 0,
@@ -33,8 +40,11 @@ WallType walltype;
 
 -(void)initSource{
     self.backgroundColor = [UIColor whiteColor];
-    
+    zoomScale = 1.0f;
+    originX = self.frame.size.width / 2;
+    originY = self.frame.size.height / 2;
     self.wallArray = [[NSMutableArray alloc] init];
+    self.wallArrayOrigin = [[NSMutableArray alloc] init];
     self.xLines = [[NSMutableArray alloc] init];
     self.yLines = [[NSMutableArray alloc] init];
     self.currentWall = [[Wall alloc] init];
@@ -43,6 +53,10 @@ WallType walltype;
     panGestureRecognizer.maximumNumberOfTouches = 1;
     [panGestureRecognizer setDelegate:self];
     [self addGestureRecognizer:panGestureRecognizer];
+    
+    UIPinchGestureRecognizer *pinchGestureRecognizer = [[UIPinchGestureRecognizer alloc] initWithTarget:self action:@selector(pinchGestureDetected:)];
+    [pinchGestureRecognizer setDelegate:self];
+    [self addGestureRecognizer:pinchGestureRecognizer];
     
     self.mathUtil = [[MathUtil alloc] init];
 }
@@ -59,6 +73,14 @@ WallType walltype;
     self.isFindingPoint = NO;
 }
 
+-(void)popWallArray{
+    if(self.wallArray.count > 0)
+    {
+        int index = self.wallArray.count - 1;
+        [self.wallArray removeObjectAtIndex:index];
+        [self setNeedsDisplay];
+    }
+}
 #pragma mark - drawRect
 
 -(void)drawRect:(CGRect)rect{
@@ -214,6 +236,32 @@ WallType walltype;
     }
 }
 
+-(void)pinchGestureDetected:(UIPinchGestureRecognizer *)recognizer{
+    if((long)[recognizer state] == (long)UIGestureRecognizerStateBegan){
+        if(zoomScale == 1.0f)
+        {
+            [self pinchStart];
+        }
+        zoomTemp = zoomScale;
+    }else if((long)[recognizer state] == (long)UIGestureRecognizerStateChanged){
+        CGFloat currentScale = recognizer.scale * zoomTemp;
+        if(currentScale > 1){
+            zoomScale = zoomTemp * recognizer.scale;
+            [self pinchChanges:currentScale];
+        }
+        else{
+            zoomScale = 1.0f;
+            [self pinchReset];
+        }
+    }else if((long)[recognizer state] == (long)UIGestureRecognizerStateEnded){
+        zoomScale = zoomTemp * recognizer.scale;
+        if(zoomScale <= 1.0f){
+            zoomScale = 1.0f;
+            [self pinchReset];
+        }
+    }
+}
+
 #pragma mark - helper
 //在墙面上找到点
 -(CGPoint)findPoint:(CGPoint) point{
@@ -290,6 +338,7 @@ WallType walltype;
         wall.endPoint = CGPointMake(wall.endPoint.x+offsetX, wall.endPoint.y+offsetY);
     }
 }
+//拖动的正确方法
 -(void)panCanvas:(CGPoint)point{
     for(Wall *wall in self.wallArray)
     {
@@ -321,5 +370,36 @@ WallType walltype;
     if(wall.wallType == Horizon){
         
     }
+}
+//开始缩放
+-(void)pinchStart{
+    [self.wallArrayOrigin removeAllObjects];
+    for(int i = 0;i < self.wallArray.count;i++){
+        Wall *wall = [self.wallArray objectAtIndex:i];
+        Wall *wallOrigin = [[Wall alloc] initWithAnotherWall:wall];
+        [self.wallArrayOrigin addObject:wallOrigin];
+    }
+}
+//缩放变化
+-(void)pinchChanges:(CGFloat)scale{
+    for(int i = 0;i < self.wallArray.count;i++){
+        Wall *wallOrigin = self.wallArrayOrigin[i];
+        CGPoint startOrigin = wallOrigin.startPoint;
+        CGPoint endOrigin = wallOrigin.endPoint;
+        
+        Wall *wall = self.wallArray[i];
+        wall.startPoint = CGPointMake(originX + (startOrigin.x - originX) * scale, originY + (startOrigin.y - originY) * scale);
+        wall.endPoint = CGPointMake(originX + (endOrigin.x - originX) * scale, originY + (endOrigin.y - originY) * scale);
+    }
+    [self setNeedsDisplay];
+}
+//重新回到1比例
+-(void)pinchReset{
+    [self.wallArray removeAllObjects];
+    for(int i = 0;i < self.wallArrayOrigin.count;i++){
+        Wall *wall = [[Wall alloc] initWithAnotherWall:self.wallArrayOrigin[i]];
+        [self.wallArray addObject:wall];
+    }
+    [self setNeedsDisplay];
 }
 @end

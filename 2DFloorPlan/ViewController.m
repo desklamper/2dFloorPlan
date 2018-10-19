@@ -12,6 +12,7 @@
 
 @interface ViewController ()
 @property (nonatomic,strong) UIButton *addWall;
+@property (nonatomic,strong) UIButton *undo;
 @property (nonatomic,strong) CanvasView *canvas;
 @end
 
@@ -38,12 +39,21 @@
     [self.addWall addTarget:self action:@selector(drag:withEvent:) forControlEvents:UIControlEventTouchDragInside];
     [self.addWall addTarget:self action:@selector(addWall:withEvent:) forControlEvents:UIControlEventTouchUpInside];
     [self.view addSubview:self.addWall];
+    
+    self.undo = [[UIButton alloc] initWithFrame:CGRectMake(50, 90, 80, 30)];
+    self.undo.backgroundColor = [UIColor blackColor];
+    [self.undo setTitle:@"撤销墙体" forState:UIControlStateNormal];
+    [self.undo setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [self.undo addTarget:self action:@selector(undo:) forControlEvents:UIControlEventTouchUpInside];
+    [self.view addSubview:self.undo];
 }
 
 -(void)drag:(UIButton *)btn withEvent:ev
 {
-    btn.center = [[[ev allTouches] anyObject] locationInView:self.view];
-    [self.canvas addWall:btn.center];
+    CGPoint a = [[[ev allTouches] anyObject] locationInView:self.view];
+    CGPoint b = CGPointMake(a.x + 30, a.y + 30);
+    btn.center = a;
+    [self.canvas addWall:a];
 //    [self.canvas setNeedsDisplay];
 }
 
@@ -53,7 +63,9 @@
     [self.canvas startPan];
 }
 
-
+-(void)undo:(UIButton *)undo{
+    [self.canvas popWallArray];
+}
 
 
 

@@ -20,6 +20,7 @@ NS_ASSUME_NONNULL_BEGIN
 @property (nonatomic) float length;
 @property (nonatomic) int wallType;
 
+-(instancetype)initWithAnotherWall:(Wall *)wall;
 -(void)redefine;
 @end
 

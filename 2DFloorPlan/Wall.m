@@ -15,6 +15,14 @@
     return self;
 }
 
+-(instancetype)initWithAnotherWall:(Wall *)resourceWall{
+    Wall *wall = [[Wall alloc] init];
+    wall.startPoint = resourceWall.startPoint;
+    wall.endPoint = resourceWall.endPoint;
+    wall.wallType = resourceWall.wallType;
+    return wall;
+}
+
 -(void)redefine{
     if(self.wallType == 0)
     {
