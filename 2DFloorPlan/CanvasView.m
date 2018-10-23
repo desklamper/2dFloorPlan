@@ -228,8 +228,17 @@ WallType walltype;
 //            self.currentWall.endPoint = xOy == 0 ? CGPointMake(endPoint.x,self.currentWall.startPoint.y) : CGPointMake(self.currentWall.startPoint.x, endPoint.y);
 //            self.currentWall.wallType = xOy;
             [self.currentWall redefine];
-            Wall *wall = self.currentWall;
-            [self.wallArray addObject:wall];
+            if([self mixWall:self.currentWall])
+            {
+
+            }
+            else
+            {
+                Wall *wall = self.currentWall;
+                [self.wallArray addObject:wall];
+            }
+//            Wall *wall = self.currentWall;
+//            [self.wallArray addObject:wall];
             [self setNeedsDisplay];
             self.isAddingWall = NO;
         }
@@ -373,7 +382,7 @@ WallType walltype;
     return YES;
 }
 //墙体融合
--(void)mixWall:(Wall *)wall{
+-(BOOL)mixWall:(Wall *)wall{
     if(wall.wallType == Horizon){
         for(Wall *wall1 in self.wallArray)
         {
@@ -386,6 +395,7 @@ WallType walltype;
                 {
                     wall1.endPoint = wall.endPoint;
                 }
+                return YES;
             }
         }
     }
@@ -402,9 +412,11 @@ WallType walltype;
                 {
                     wall1.endPoint = wall.endPoint;
                 }
+                return YES;
             }
         }
     }
+    return NO;
 }
 //检测两个墙面是否在一条直线上并且可以融合
 -(BOOL)isWallsInLine:(Wall *)wall1 anotherWall:(Wall *)wall2{
@@ -412,17 +424,34 @@ WallType walltype;
     CGPoint end1 = wall1.endPoint;
     CGPoint start2 = wall2.startPoint;
     CGPoint end2 = wall2.endPoint;
-    if([self comparePoint:start1 anotherPoint:start2])
+    if(wall1.wallType == Horizon && wall1.startPoint.y == wall2.startPoint.y)
     {
-        if([self comparePoint:start1 anotherPoint:end2])
-            return false;
+        if([self comparePoint:start1 anotherPoint:start2])
+        {
+            if([self comparePoint:start1 anotherPoint:end2])
+                return false;
+        }
+        if([self comparePoint:start2 anotherPoint:start1])
+        {
+            if([self comparePoint:start2 anotherPoint:end1])
+                return false;
+        }
+        return true;
     }
-    if([self comparePoint:start2 anotherPoint:start1])
-    {
-        if([self comparePoint:start2 anotherPoint:end1])
-            return false;
+    else if(wall1.wallType == Vertical && wall1.startPoint.x == wall2.startPoint.x){
+        if([self comparePoint:start1 anotherPoint:start2])
+        {
+            if([self comparePoint:start1 anotherPoint:end2])
+                return false;
+        }
+        if([self comparePoint:start2 anotherPoint:start1])
+        {
+            if([self comparePoint:start2 anotherPoint:end1])
+                return false;
+        }
+        return true;
     }
-    return true;
+    return false;
 }
 //比较两个点的大小
 -(BOOL)comparePoint:(CGPoint)point1 anotherPoint:(CGPoint)point2{
