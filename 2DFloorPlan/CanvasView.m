@@ -346,6 +346,13 @@ WallType walltype;
         CGPoint end = CGPointMake(wall.endPoint.x+point.x, wall.endPoint.y+point.y);
         wall.startPoint = start;
         wall.endPoint = end;
+        
+        if(zoomScale > 1.0f){
+//            Wall *wallOrigin = [self.wallArrayOrigin objectAtIndex:<#(NSUInteger)#>]
+        }
+    }
+    for(int i = 0;i < self.wallArray.count;i++){
+        
     }
 }
 //检测一面墙是否在屏幕外
@@ -368,7 +375,68 @@ WallType walltype;
 //墙体融合
 -(void)mixWall:(Wall *)wall{
     if(wall.wallType == Horizon){
-        
+        for(Wall *wall1 in self.wallArray)
+        {
+            if(wall1.wallType == Horizon && [self isWallsInLine:wall anotherWall:wall1])
+            {
+                if([self comparePoint:wall1.startPoint anotherPoint:wall.startPoint]){
+                    wall1.startPoint = wall.startPoint;
+                }
+                if([self comparePoint:wall.endPoint anotherPoint:wall1.endPoint])
+                {
+                    wall1.endPoint = wall.endPoint;
+                }
+            }
+        }
+    }
+    else
+    {
+        for(Wall *wall1 in self.wallArray)
+        {
+            if(wall1.wallType == Vertical && [self isWallsInLine:wall anotherWall:wall1])
+            {
+                if([self comparePoint:wall1.startPoint anotherPoint:wall.startPoint]){
+                    wall1.startPoint = wall.startPoint;
+                }
+                if([self comparePoint:wall.endPoint anotherPoint:wall1.endPoint])
+                {
+                    wall1.endPoint = wall.endPoint;
+                }
+            }
+        }
+    }
+}
+//检测两个墙面是否在一条直线上并且可以融合
+-(BOOL)isWallsInLine:(Wall *)wall1 anotherWall:(Wall *)wall2{
+    CGPoint start1 = wall1.startPoint;
+    CGPoint end1 = wall1.endPoint;
+    CGPoint start2 = wall2.startPoint;
+    CGPoint end2 = wall2.endPoint;
+    if([self comparePoint:start1 anotherPoint:start2])
+    {
+        if([self comparePoint:start1 anotherPoint:end2])
+            return false;
+    }
+    if([self comparePoint:start2 anotherPoint:start1])
+    {
+        if([self comparePoint:start2 anotherPoint:end1])
+            return false;
+    }
+    return true;
+}
+//比较两个点的大小
+-(BOOL)comparePoint:(CGPoint)point1 anotherPoint:(CGPoint)point2{
+    if(point1.x == point2.x){
+        if(point1.y > point2.y)
+            return YES;//point1大
+        else
+            return NO;
+    }
+    else{
+        if(point1.x > point2.x)
+            return YES;
+        else
+            return NO;
     }
 }
 //开始缩放
