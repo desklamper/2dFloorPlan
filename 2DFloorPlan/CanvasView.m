@@ -138,14 +138,14 @@ WallType walltype;
         for(Wall *wall in self.wallArray)
         {
             if(wall.wallType == Horizon){
-//                drawx = wall.startPoint;
-//                CGContextMoveToPoint(context, drawx.x, lowest-30);
-//                CGContextAddLineToPoint(context, drawx.x, lowest-10);
-//                CGContextStrokePath(context);
-//                drawx = wall.endPoint;
-//                CGContextMoveToPoint(context, drawx.x, lowest-30);
-//                CGContextAddLineToPoint(context, drawx.x, lowest-10);
-//                CGContextStrokePath(context);
+                drawx = wall.startPoint;
+                CGContextMoveToPoint(context, drawx.x, lowest-30);
+                CGContextAddLineToPoint(context, drawx.x, lowest-10);
+                CGContextStrokePath(context);
+                drawx = wall.endPoint;
+                CGContextMoveToPoint(context, drawx.x, lowest-30);
+                CGContextAddLineToPoint(context, drawx.x, lowest-10);
+                CGContextStrokePath(context);
                 drawy = wall.startPoint;
                 CGContextMoveToPoint(context, leftest-30, drawy.y);
                 CGContextAddLineToPoint(context, leftest-10, drawy.y);
@@ -153,14 +153,14 @@ WallType walltype;
             }
             else if(wall.wallType == Vertical)
             {
-//                drawy = wall.startPoint;
-//                CGContextMoveToPoint(context, leftest-30, drawy.y);
-//                CGContextAddLineToPoint(context, leftest-10, drawy.y);
-//                CGContextStrokePath(context);
-//                drawy = wall.endPoint;
-//                CGContextMoveToPoint(context, leftest-30, drawy.y);
-//                CGContextAddLineToPoint(context, leftest-10, drawy.y);
-//                CGContextStrokePath(context);
+                drawy = wall.startPoint;
+                CGContextMoveToPoint(context, leftest-30, drawy.y);
+                CGContextAddLineToPoint(context, leftest-10, drawy.y);
+                CGContextStrokePath(context);
+                drawy = wall.endPoint;
+                CGContextMoveToPoint(context, leftest-30, drawy.y);
+                CGContextAddLineToPoint(context, leftest-10, drawy.y);
+                CGContextStrokePath(context);
                 drawx = wall.startPoint;
                 CGContextMoveToPoint(context, drawx.x, lowest-30);
                 CGContextAddLineToPoint(context, drawx.x, lowest-10);
